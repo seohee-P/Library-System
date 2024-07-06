@@ -24,10 +24,12 @@ public class BookService {
                 .stream().map(BookResponseDto::new).toList();
     }
 
+
     public BookResponseDto findBookById(Long id) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Book not found"));
         return new BookResponseDto(book);
     }
+
 
 
 }

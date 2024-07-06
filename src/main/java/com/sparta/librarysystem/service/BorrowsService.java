@@ -26,7 +26,7 @@ public class BorrowsService {
 
     @Transactional
     public BorrowsResponseDto borrowBook(BorrowsRequestDto requestDto) {
-        Book book = bookRepository.findById(requestDto.getBookId()).orElseThrow(()->
+        Book book = bookRepository.findById(requestDto.getBookId()).orElseThrow(() ->
                 new IllegalArgumentException("해당 책이 없습니다."));
         User user = userRepository.findById(requestDto.getUserId()).orElseThrow(() ->
                 new IllegalArgumentException("해당 회원이 없습니다."));
@@ -45,54 +45,70 @@ public class BorrowsService {
         return new BorrowsResponseDto(borrowsRepository.save(requestDto.toEntity()));
     }
 
-   public List<BorrowHistoryResponseDto> findByUserIdAllBorrows(Long userId) {
-        List<Borrows> borrowsList= borrowsRepository.findAllByUserId(userId);
+    public List<BorrowsResponseDto> findAllBorrows() {
+        return borrowsRepository.findAll().stream().map(BorrowsResponseDto::new).toList();
+    }
+
+    public List<BorrowHistoryResponseDto> findByUserIdAllBorrows(Long userId) {
+        List<Borrows> borrowsList = borrowsRepository.findAllByUserId(userId);
         List<BorrowHistoryResponseDto> result = new ArrayList<>();
-       for (Borrows borrows : borrowsList) {
-           Book book = bookRepository.findById(borrows.getBookId()).orElseThrow(()->
-                   new IllegalArgumentException("해당 책이 없습니다."));
-           User user = userRepository.findById(borrows.getUserId()).orElseThrow(()->
-                   new IllegalArgumentException("해당 회원이 없습니다."));
-           result.add(BorrowHistoryResponseDto.builder()
-                   .bookName(book.getTitle())
-                   .bookAuthor(book.getAuthor())
-                   .userName(user.getName())
-                   .userPhoneNumber(user.getPhoneNumber())
-                   .build());
-       }
-       return result;
-   }
+        for (Borrows borrows : borrowsList) {
+            Book book = bookRepository.findById(borrows.getBookId()).orElseThrow(() ->
+                    new IllegalArgumentException("해당 책이 없습니다."));
+            User user = userRepository.findById(borrows.getUserId()).orElseThrow(() ->
+                    new IllegalArgumentException("해당 회원이 없습니다."));
+            result.add(BorrowHistoryResponseDto.builder()
+                    .bookId(book.getId())
+                    .bookName(book.getTitle())
+                    .bookAuthor(book.getAuthor())
+                    .userId(user.getId())
+                    .userName(user.getName())
+                    .userPhoneNumber(user.getPhoneNumber())
+                    .borrowDate(borrows.getBorrowDate())
+                    .isReturned(borrows.getIsReturned())
+                    .returnDate(borrows.getReturnDate())
+                    .build());
+        }
+        return result;
+    }
 
     public List<BorrowHistoryResponseDto> findByUserIdBorrowsNotReturned(Long userId) {
         List<Borrows> borrowsList = borrowsRepository
                 .findAllByUserIdAndIsReturnedFalseOrderByBorrowDateAsc(userId);
         List<BorrowHistoryResponseDto> result = new ArrayList<>();
         for (Borrows borrows : borrowsList) {
-            Book book = bookRepository.findById(borrows.getBookId()).orElseThrow(()->
+            Book book = bookRepository.findById(borrows.getBookId()).orElseThrow(() ->
                     new IllegalArgumentException("해당 책이 없습니다."));
-            User user = userRepository.findById(borrows.getUserId()).orElseThrow(()->
+            User user = userRepository.findById(borrows.getUserId()).orElseThrow(() ->
                     new IllegalArgumentException("해당 회원이 없습니다."));
             result.add(BorrowHistoryResponseDto.builder()
+                    .bookId(book.getId())
                     .bookName(book.getTitle())
                     .bookAuthor(book.getAuthor())
+                    .userId(user.getId())
                     .userName(user.getName())
                     .userPhoneNumber(user.getPhoneNumber())
+                    .borrowDate(borrows.getBorrowDate())
+                    .isReturned(borrows.getIsReturned())
+                    .returnDate(borrows.getReturnDate())
                     .build());
         }
         return result;
     }
+
     @Transactional
-    public void returnBook(BorrowsRequestDto requestDto) {
-        Book book = bookRepository.findById(requestDto.getBookId()).orElseThrow(()->
+    public BorrowsResponseDto returnBook(BorrowsRequestDto requestDto) {
+        Book book = bookRepository.findById(requestDto.getBookId()).orElseThrow(() ->
                 new IllegalArgumentException("해당 책이 없습니다"));
         book.update("returned");
         Borrows borrow = borrowsRepository.findByBookIdAndIsReturnedFalse(requestDto.getBookId());
         borrow.update();
         // 책을 7일 이내에 반납 안했으면
         if (borrow.getReturnDate().isAfter(borrow.getBorrowDate().plusDays(7))) {
-            User user = userRepository.findById(borrow.getUserId()).orElseThrow(()->
+            User user = userRepository.findById(borrow.getUserId()).orElseThrow(() ->
                     new IllegalArgumentException("해당 회원이 없습니다."));
             user.getPenalty(borrow.getReturnDate());
         }
+        return new BorrowsResponseDto(borrow);
     }
 }
