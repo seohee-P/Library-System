@@ -19,5 +19,4 @@ API 문서는 POSTMAN으로 작성했습니다 🔗 <a href=https://documenter.g
 <br> 연관관계를 안 써서 테이블이 서로 연결되어 있지 않습니다.
 
 ## 🖊️ USECASE 다이어그램
-
-
+<img width="568" alt="스크린샷 2024-07-06 오후 4 58 33" src="https://github.com/seohee-P/Library-System/assets/86008429/9fea83c3-37c3-4938-a2e2-7d59b3725063">
