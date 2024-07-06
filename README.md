@@ -12,7 +12,7 @@
 - **IDE** : IntelliJ
 - **DataBase** : MySQL 8.0.37</p>
 ## 📄 API 문서
-API 문서는 POSTMAN으로 작성했습니다 🔗 <a herf=https://documenter.getpostman.com/view/29104791/2sA3e1AV4E traget='_blank'>바로가기</a>
+API 문서는 POSTMAN으로 작성했습니다 🔗 <a href=https://documenter.getpostman.com/view/29104791/2sA3e1AV4E traget='_blank'>바로가기</a>
 
 ## 📂 사용한 테이블
 <img width="523" alt="스크린샷 2024-07-06 오후 4 04 40" src="https://github.com/seohee-P/Library-System/assets/86008429/9936e6aa-3e53-4b2f-8bdf-a7f037491a2e">
