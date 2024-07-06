@@ -7,6 +7,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -19,6 +22,11 @@ public class UserService {
     public UserResponseDto findUserById(Long id) {
         return new UserResponseDto(userRepository.findById(id).orElseThrow(()->
                 new EntityNotFoundException("User with id " + id + " not found")));
+    }
+
+    public List<UserResponseDto> getPenaltyUser() {
+        return userRepository.findByPenaltyDueToIsGreaterThanEqual(LocalDate.now())
+                .stream().map(UserResponseDto::new).toList();
     }
 
 }

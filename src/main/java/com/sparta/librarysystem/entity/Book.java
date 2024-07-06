@@ -11,12 +11,13 @@ import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor(access= AccessLevel.PROTECTED)
 @DynamicInsert
 @EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Entity
 public class Book {
     @Id

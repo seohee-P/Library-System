@@ -32,7 +32,7 @@ public class BorrowsController {
         return ResponseEntity.ok().body(borrowsService.findByUserIdBorrowsNotReturned(userId));
     }
 
-    @PutMapping("/borrow")
+    @PatchMapping("/return")
     public void returnBook(@RequestBody BorrowsRequestDto requestDto){
         borrowsService.returnBook(requestDto);
     }

@@ -85,7 +85,7 @@ public class BorrowsService {
     public void returnBook(BorrowsRequestDto requestDto) {
         Book book = bookRepository.findById(requestDto.getBookId()).orElseThrow(()->
                 new IllegalArgumentException("해당 책이 없습니다"));
-        book.update("borrowed");
+        book.update("returned");
         Borrows borrow = borrowsRepository.findByBookIdAndIsReturnedFalse(requestDto.getBookId());
         borrow.update();
         // 책을 7일 이내에 반납 안했으면
